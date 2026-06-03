@@ -1,0 +1,4 @@
+Tier,Services,Build_Storage_Cost,Build_Compute_Cost,Build_Network_Cost,Build_Total_Cost,Datadog_Log_Cost,Datadog_Infra_Metric_Cost,Buy_Total_Cost
+Small,10,75.0,150.0,256.4,481.4,900.0,1750.0,2650.0
+Medium,100,750.0,1500.0,2563.99,4813.99,9000.0,17500.0,26500.0
+Large,1000,7500.0,15000.0,25639.88,48139.88,90000.0,175000.0,265000.0

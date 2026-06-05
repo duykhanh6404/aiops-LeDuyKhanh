@@ -1,39 +1,29 @@
 # Detection Approach - DESIGN.md
 
-## Approach toi dung
+## Approach e dùng
 
-Rule-based streaming detector voi rolling state nho trong memory. Pipeline nhan tung payload o `/ingest`, doc metrics va logs, sau do so sanh voi cac nguong bao thu duoc suy ra tu bang normal range trong de bai.
+Rule-based streaming detector với rolling state nhỏ trong memory. Pipeline nhận từng payload ở `/ingest`, đọc metrics và logs, sau đó so sánh với các ngưỡng báo thu được suy ra từ bảng normal range trong đề bài.
 
-## Tai sao chon approach nay
+## Tại sao chọn approach này
 
-Lab co baseline ro rang va chi co ba fault can phan loai: `memory_leak`, `traffic_spike`, `dependency_timeout`. Rule-based detection phu hop streaming vi xu ly tung event ngay khi den, khong can train model, it phu thuoc thu vien, va de giai thich evidence trong alert.
+Lab có baseline rõ ràng và chỉ có ba fault cần phân loại: `memory_leak`, `traffic_spike`, `dependency_timeout`. Rule-based detection phù hợp streaming vì xử lý từng event ngay khi đến, không cần train model, ít phụ thuộc thư viện, và dễ giải thích evidence trong alert.
 
-## Cach hoat dong
+## Cách hoạt động
 
-Moi POST duoc validate JSON, luu vao rolling window 120 diem gan nhat, roi chay cac rule theo thu tu root cause. Dependency timeout duoc uu tien truoc vi retry co the lam tang traffic va queue; traffic spike dung RPS, queue depth va latency; memory leak dung memory utilization, GC pause va log signal. Khi rule match, pipeline ghi mot dong JSON vao `alerts.jsonl`. Alert duoc deduplicate theo `type`; neu cung mot type da co warning thi chi ghi them khi severity tang len critical.
+Mỗi POST được validate JSON, lưu vào rolling window 120 điểm gần nhất, rồi chạy các rule theo thứ tự root cause. Dependency timeout được ưu tiên trước vì retry có thể làm tăng traffic và queue; traffic spike dùng RPS, queue depth và latency; memory leak dùng memory utilization, GC pause và log signal. Khi rule match, pipeline ghi một dòng JSON vào `alerts.jsonl`. Alert được deduplicate theo `type`; nếu cùng một type đã có warning thì chỉ ghi thêm khi severity tăng lên critical.
 
 ## Parameters 
 
-- `memory_leak`: memory utilization >= 70% va GC pause >= 45ms, hoac log co dau hieu OOM/GC pause. Critical khi utilization >= 80%, GC pause >= 100ms, hoac co ERROR/FATAL log.
-- `traffic_spike`: RPS >= 320, queue depth >= 40, p99 latency >= 180ms. Critical khi RPS >= 500, queue depth >= 120, hoac 5xx >= 10%.
-- `dependency_timeout`: upstream timeout >= 5%, 5xx >= 2%, p99 latency >= 180ms. Critical khi upstream timeout >= 20% hoac 5xx >= 10%.
-- Rolling history size = 120 datapoints de giu context gan day cho debug/stats ma khong ton bo nho.
+- `memory_leak`: memory utilization >= 70% và GC pause >= 45ms, hoặc log có dấu hiệu OOM/GC pause. Critical khi utilization >= 80%, GC pause >= 100ms, hoặc có ERROR/FATAL log.
+- `traffic_spike`: RPS >= 320, queue depth >= 40, p99 latency >= 180ms. Critical khi RPS >= 500, queue depth >= 120, hoặc 5xx >= 10%.
+- `dependency_timeout`: upstream timeout >= 5%, 5xx >= 2%, p99 latency >= 180ms. Critical khi upstream timeout >= 20% hoặc 5xx >= 10%.
+- Rolling history size = 120 datapoints để giữ context gần đây cho debug/stats mà không tốn bộ nhớ.
 
-Cac nguong tren nam xa vung normal trong de bai: memory binh thuong khoang 40%, RPS 80-160, queue 2-10, upstream timeout 0-0.4%. Vi vay detector tranh alert som truoc khi fault that su xay ra.
+Các ngưỡng trên nằm xa vùng normal trong đề bài: memory bình thường khoảng 40%, RPS 80-160, queue 2-10, upstream timeout 0-0.4%. Vì vậy detector tránh alert sớm trước khi fault thật sự xảy ra.
 
 ## Pipeline / Architecture
 
-Source ve diagram nam o `architecture_diagram.py` va dung Python `diagrams` library. Khi may co Graphviz tren PATH, chay:
+![architecture](architecture.png)
 
 ```bash
 python architecture_diagram.py
-```
-
-Script se tao `architecture.png`. Neu thieu Graphviz executable `dot`, script giu lai `architecture.dot` de render sau.
-
-## Cai thien neu co them thoi gian
-
-- Them adaptive baseline theo moving median/MAD cho moi metric.
-- Ghi metric raw va alert vao SQLite hoac DuckDB de replay/debug.
-- Them cooldown theo thoi gian thay vi chi deduplicate theo severity.
-- Viet test end-to-end voi generator o che do speed cao va fault injection ngan hon.

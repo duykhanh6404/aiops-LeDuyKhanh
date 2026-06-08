@@ -1,5 +1,5 @@
 # E2E Data Layer Architecture cho Anomaly Detection trên Payment Service
-
+![architecture.png](architecture.png)
 ## 1. Use Case Description
 Phát hiện các hành vi bất thường (anomaly detection) đối với hệ thống Payment Service (ví dụ: số lượng giao dịch lỗi tăng đột biến, độ trễ thanh toán tăng vọt, số lượng giao dịch từ một IP lạ tăng cao bất thường).
 

@@ -1,0 +1,83 @@
+{
+  "clusters_analyzed": 3,
+  "results": [
+    {
+      "cluster_id": "c-000-000",
+      "graph_top3": [
+        [
+          "payment-svc",
+          1.0
+        ],
+        [
+          "checkout-svc",
+          0.81
+        ],
+        [
+          "cart-svc",
+          0.69
+        ]
+      ],
+      "root_cause": "payment-svc",
+      "class": "connection_pool_exhaustion",
+      "confidence": 0.99,
+      "actions": [
+        "Rollback to v3.1",
+        "Scale pool 50 → 100 cushion",
+        "Add pool monitor alert > 80%"
+      ],
+      "reasoning": "Graph scorer ranks payment-svc highest. Retrieval top-1 is INC-2025-11-08 with similarity 1.00, class connection_pool_exhaustion, and overlapping services ['checkout-svc', 'payment-svc'].",
+      "similar_incidents": [
+        "INC-2025-11-08",
+        "INC-2025-09-05",
+        "INC-2026-05-10"
+      ],
+      "method": "graph+retrieval-knn"
+    },
+    {
+      "cluster_id": "c-000-001",
+      "graph_top3": [
+        [
+          "recommender-svc",
+          0.92
+        ]
+      ],
+      "root_cause": "recommender-svc",
+      "class": "memory_leak",
+      "confidence": 0.85,
+      "actions": [
+        "Patch leak; rollback v3.0 trong khi chờ",
+        "Add gc.collect() trong handler"
+      ],
+      "reasoning": "Graph scorer ranks recommender-svc highest. Retrieval top-1 is INC-2025-08-02 with similarity 0.76, class memory_leak, and overlapping services ['recommender-svc'].",
+      "similar_incidents": [
+        "INC-2025-08-02",
+        "INC-2026-03-07",
+        "INC-2025-10-28"
+      ],
+      "method": "graph+retrieval-knn"
+    },
+    {
+      "cluster_id": "c-000-002",
+      "graph_top3": [
+        [
+          "search-svc",
+          0.92
+        ]
+      ],
+      "root_cause": "search-svc",
+      "class": "cache_cold_start",
+      "confidence": 0.85,
+      "actions": [
+        "Pre-warm cache trên health check",
+        "Tăng warmup quota"
+      ],
+      "reasoning": "Graph scorer ranks search-svc highest. Retrieval top-1 is INC-2026-05-25 with similarity 0.76, class cache_cold_start, and overlapping services ['search-svc'].",
+      "similar_incidents": [
+        "INC-2026-05-25",
+        "INC-2026-01-29",
+        "INC-2025-09-21"
+      ],
+      "method": "graph+retrieval-knn"
+    }
+  ]
+}

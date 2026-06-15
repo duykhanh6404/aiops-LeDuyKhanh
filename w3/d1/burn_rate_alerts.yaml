@@ -1,0 +1,195 @@
+groups:
+  - name: frontend-slo
+    rules:
+      - alert: FrontendSLOBurnRateTier1
+        expr: |
+          (
+            sum(rate(frontend_rum_events_total{service="frontend",network_error="true"}[1h]))
+            / sum(rate(frontend_rum_events_total{service="frontend"}[1h]))
+          ) / (1 - 0.99) >= 14.4
+          AND
+          (
+            sum(rate(frontend_rum_events_total{service="frontend",network_error="true"}[5m]))
+            / sum(rate(frontend_rum_events_total{service="frontend"}[5m]))
+          ) / (1 - 0.99) >= 14.4
+        labels:
+          severity: page
+          tier: "1"
+          service: frontend
+        annotations:
+          summary: "Frontend SLO is burning at least 14.4x"
+          runbook: "https://runbooks.example.com/frontend-slo-burn"
+
+      - alert: FrontendSLOBurnRateTier2
+        expr: |
+          (
+            sum(rate(frontend_rum_events_total{service="frontend",network_error="true"}[6h]))
+            / sum(rate(frontend_rum_events_total{service="frontend"}[6h]))
+          ) / (1 - 0.99) >= 6
+          AND
+          (
+            sum(rate(frontend_rum_events_total{service="frontend",network_error="true"}[30m]))
+            / sum(rate(frontend_rum_events_total{service="frontend"}[30m]))
+          ) / (1 - 0.99) >= 6
+        labels:
+          severity: page
+          tier: "2"
+          service: frontend
+        annotations:
+          summary: "Frontend SLO is burning at least 6x"
+          runbook: "https://runbooks.example.com/frontend-slo-burn"
+
+      - alert: FrontendSLOBurnRateTier3
+        expr: |
+          (
+            sum(rate(frontend_rum_events_total{service="frontend",network_error="true"}[3d]))
+            / sum(rate(frontend_rum_events_total{service="frontend"}[3d]))
+          ) / (1 - 0.99) >= 1
+          AND
+          (
+            sum(rate(frontend_rum_events_total{service="frontend",network_error="true"}[6h]))
+            / sum(rate(frontend_rum_events_total{service="frontend"}[6h]))
+          ) / (1 - 0.99) >= 1
+        labels:
+          severity: ticket
+          tier: "3"
+          service: frontend
+        annotations:
+          summary: "Frontend SLO is burning at least 1x"
+          runbook: "https://runbooks.example.com/frontend-slo-burn"
+
+  - name: api-slo
+    rules:
+      - alert: ApiSLOBurnRateTier1
+        expr: |
+          (
+            sum(rate(http_requests_total{service="api",status=~"5..|429"}[1h]))
+            / (
+              sum(rate(http_requests_total{service="api",status!~"4.."}[1h]))
+              + sum(rate(http_requests_total{service="api",status="429"}[1h]))
+            )
+          ) / (1 - 0.999) >= 13
+          AND
+          (
+            sum(rate(http_requests_total{service="api",status=~"5..|429"}[5m]))
+            / (
+              sum(rate(http_requests_total{service="api",status!~"4.."}[5m]))
+              + sum(rate(http_requests_total{service="api",status="429"}[5m]))
+            )
+          ) / (1 - 0.999) >= 13
+        labels:
+          severity: page
+          tier: "1"
+          service: api
+        annotations:
+          summary: "API SLO is burning at least 13x"
+          runbook: "https://runbooks.example.com/api-slo-burn"
+
+      - alert: ApiSLOBurnRateTier2
+        expr: |
+          (
+            sum(rate(http_requests_total{service="api",status=~"5..|429"}[6h]))
+            / (
+              sum(rate(http_requests_total{service="api",status!~"4.."}[6h]))
+              + sum(rate(http_requests_total{service="api",status="429"}[6h]))
+            )
+          ) / (1 - 0.999) >= 6
+          AND
+          (
+            sum(rate(http_requests_total{service="api",status=~"5..|429"}[30m]))
+            / (
+              sum(rate(http_requests_total{service="api",status!~"4.."}[30m]))
+              + sum(rate(http_requests_total{service="api",status="429"}[30m]))
+            )
+          ) / (1 - 0.999) >= 6
+        labels:
+          severity: page
+          tier: "2"
+          service: api
+        annotations:
+          summary: "API SLO is burning at least 6x"
+          runbook: "https://runbooks.example.com/api-slo-burn"
+
+      - alert: ApiSLOBurnRateTier3
+        expr: |
+          (
+            sum(rate(http_requests_total{service="api",status=~"5..|429"}[3d]))
+            / (
+              sum(rate(http_requests_total{service="api",status!~"4.."}[3d]))
+              + sum(rate(http_requests_total{service="api",status="429"}[3d]))
+            )
+          ) / (1 - 0.999) >= 1
+          AND
+          (
+            sum(rate(http_requests_total{service="api",status=~"5..|429"}[6h]))
+            / (
+              sum(rate(http_requests_total{service="api",status!~"4.."}[6h]))
+              + sum(rate(http_requests_total{service="api",status="429"}[6h]))
+            )
+          ) / (1 - 0.999) >= 1
+        labels:
+          severity: ticket
+          tier: "3"
+          service: api
+        annotations:
+          summary: "API SLO is burning at least 1x"
+          runbook: "https://runbooks.example.com/api-slo-burn"
+
+  - name: db-slo
+    rules:
+      - alert: DbSLOBurnRateTier1
+        expr: |
+          (
+            sum(rate(db_queries_total{service="db",slo_good="false"}[1h]))
+            / sum(rate(db_queries_total{service="db"}[1h]))
+          ) / (1 - 0.99) >= 14.4
+          AND
+          (
+            sum(rate(db_queries_total{service="db",slo_good="false"}[5m]))
+            / sum(rate(db_queries_total{service="db"}[5m]))
+          ) / (1 - 0.99) >= 14.4
+        labels:
+          severity: page
+          tier: "1"
+          service: db
+        annotations:
+          summary: "DB query SLO is burning at least 14.4x"
+          runbook: "https://runbooks.example.com/db-slo-burn"
+
+      - alert: DbSLOBurnRateTier2
+        expr: |
+          (
+            sum(rate(db_queries_total{service="db",slo_good="false"}[6h]))
+            / sum(rate(db_queries_total{service="db"}[6h]))
+          ) / (1 - 0.99) >= 6
+          AND
+          (
+            sum(rate(db_queries_total{service="db",slo_good="false"}[30m]))
+            / sum(rate(db_queries_total{service="db"}[30m]))
+          ) / (1 - 0.99) >= 6
+        labels:
+          severity: page
+          tier: "2"
+          service: db
+        annotations:
+          summary: "DB query SLO is burning at least 6x"
+          runbook: "https://runbooks.example.com/db-slo-burn"
+
+      - alert: DbSLOBurnRateTier3
+        expr: |
+          (
+            sum(rate(db_queries_total{service="db",slo_good="false"}[3d]))
+            / sum(rate(db_queries_total{service="db"}[3d]))
+          ) / (1 - 0.99) >= 1
+          AND
+          (
+            sum(rate(db_queries_total{service="db",slo_good="false"}[6h]))
+            / sum(rate(db_queries_total{service="db"}[6h]))
+          ) / (1 - 0.99) >= 1
+        labels:
+          severity: ticket
+          tier: "3"
+          service: db
+        annotations:
+          summary: "DB query SLO is burning at least 1x"
+          runbook: "https://runbooks.example.com/db-slo-burn"

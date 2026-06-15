@@ -1,0 +1,49 @@
+version: 1
+services:
+  - name: frontend
+    sli:
+      name: frontend_network_availability
+      kind: availability
+      formula: "RUM events without a network error / all RUM events"
+      promql_good: "sum(rate(frontend_rum_events_total{service=\"frontend\",network_error=\"false\"}[5m]))"
+      promql_total: "sum(rate(frontend_rum_events_total[5m]))"
+      source: "data/frontend_rum.jsonl"
+    slo:
+      target: 0.99
+      window_days: 30
+    budget:
+      total_events_per_month: 5184000
+      allowed_failures_per_month: 51840
+      downtime_minutes_equivalent: 432
+
+  - name: api
+    sli:
+      name: api_availability
+      kind: availability
+      formula: "requests excluding client-caused 4xx that are not 429, with status below 500 / all requests excluding client-caused 4xx that are not 429"
+      promql_good: "sum(rate(http_requests_total{service=\"api\",status!~\"4..|5..\"}[5m]))"
+      promql_total: "sum(rate(http_requests_total{service=\"api\",status!~\"4..\",status!=\"429\"}[5m])) + sum(rate(http_requests_total{service=\"api\",status=\"429\"}[5m]))"
+      source: "data/access_log.jsonl"
+    slo:
+      target: 0.999
+      window_days: 30
+    budget:
+      total_events_per_month: 20737800
+      allowed_failures_per_month: 20738
+      downtime_minutes_equivalent: 43
+
+  - name: db
+    sli:
+      name: db_query_success
+      kind: latency
+      formula: "successful queries completed under 100 ms / all sampled queries"
+      promql_good: "sum(rate(db_queries_total{service=\"db\",success=\"true\",duration_slo=\"true\"}[5m]))"
+      promql_total: "sum(rate(db_queries_total{service=\"db\"}[5m]))"
+      source: "data/db_query_log.jsonl"
+    slo:
+      target: 0.99
+      window_days: 30
+    budget:
+      total_events_per_month: 1726380
+      allowed_failures_per_month: 17264
+      downtime_minutes_equivalent: 432

@@ -1,0 +1,18 @@
+{
+  "window_start": "2026-06-18T02:10:30+00:00",
+  "window_end": "2026-06-18T02:12:30+00:00",
+  "root_service": "waf-api",
+  "root_component": "regex_middleware",
+  "root_cause": "catastrophic_backtracking_in_waf_rule",
+  "confidence": 0.74,
+  "correct": true,
+  "evidence": [
+    "latency drift started immediately after WAF rule activation",
+    "CPU proxy rose before external probe failures",
+    "error-rate-only detector would not page because responses were slow 200s/timeouts"
+  ],
+  "pipeline_gaps": [
+    "No static ReDoS detector in deploy path, so the bad regex was only detected after runtime impact.",
+    "RCA evidence did not include rollout scope/canary state, so it could not prove the global-deploy blast-radius gap."
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "HighP99Latency",
+    "service": "waf-api",
+    "severity": "page",
+    "fire_ts": 1781748666,
+    "observed_value_ms": 913.22,
+    "threshold_ms": 500,
+    "evidence": "request p99 latency jumped while 5xx rate remained low"
+  },
+  {
+    "name": "CPUSaturation",
+    "service": "waf-api",
+    "severity": "ticket",
+    "fire_ts": 1781748675,
+    "observed_value_pct": 100.0,
+    "threshold_pct": 90,
+    "evidence": "CPU proxy saturated during regex evaluation"
+  }
+]

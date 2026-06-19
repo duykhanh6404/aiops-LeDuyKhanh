@@ -1,0 +1,8 @@
+{
+  "baseline_latency_ms_mean": 0.00013999990187585354,
+  "baseline_latency_ms_p99": 0.01,
+  "evil_latency_ms_p99": 913.2215999998152,
+  "evil_latency_ms_max": 920.3493999957573,
+  "cpu_proxy_pct": 100.0,
+  "timeout_count": 4
+}

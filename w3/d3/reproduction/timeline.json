@@ -1,0 +1,47 @@
+[
+  {
+    "ts": "2026-06-18T02:10:00+00:00",
+    "source": "reproduction",
+    "event": "baseline steady-state confirmed; health checks p99 below 50ms"
+  },
+  {
+    "ts": "2026-06-18T02:10:30+00:00",
+    "source": "deploy",
+    "event": "new WAF regex rule promoted to active path for all requests"
+  },
+  {
+    "ts": "2026-06-18T02:10:36+00:00",
+    "source": "metric",
+    "event": "regex evaluation p99 increased from 0.010ms to 913.2ms"
+  },
+  {
+    "ts": "2026-06-18T02:10:44+00:00",
+    "source": "metric",
+    "event": "cpu proxy reached 100.0% while error rate stayed near zero"
+  },
+  {
+    "ts": "2026-06-18T02:10:53+00:00",
+    "source": "synthetic",
+    "event": "external probe observed queued requests; max latency 920.3ms"
+  },
+  {
+    "ts": "2026-06-18T02:11:06+00:00",
+    "source": "pipeline",
+    "event": "latency anomaly alert fired for waf-api"
+  },
+  {
+    "ts": "2026-06-18T02:11:22+00:00",
+    "source": "pipeline",
+    "event": "RCA selected waf-api/regex_middleware with medium confidence"
+  },
+  {
+    "ts": "2026-06-18T02:11:50+00:00",
+    "source": "mitigation",
+    "event": "WAF rule disabled and worker process restarted"
+  },
+  {
+    "ts": "2026-06-18T02:12:28+00:00",
+    "source": "metric",
+    "event": "latency returned to baseline; synthetic health checks passed"
+  }
+]

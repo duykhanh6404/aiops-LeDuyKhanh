@@ -1,0 +1,288 @@
+[
+  {
+    "id": 1,
+    "name": "payment_latency",
+    "fault_type": "latency",
+    "expected_root_service": "payment-svc",
+    "detected": true,
+    "mttd": 28,
+    "rca_service": "payment-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1781601937,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781601965,
+          "service": "payment-svc",
+          "fault_class": "latency",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-svc",
+        "confidence": 0.88,
+        "evidence": [
+          "payment p99 latency crossed 500ms"
+        ]
+      },
+      "mttd_seconds": 28,
+      "detected": true
+    }
+  },
+  {
+    "id": 2,
+    "name": "payment_packet_loss",
+    "fault_type": "network_loss",
+    "expected_root_service": "payment-svc",
+    "detected": true,
+    "mttd": 34,
+    "rca_service": "payment-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1781601938,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781601972,
+          "service": "payment-svc",
+          "fault_class": "network_loss",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-svc",
+        "confidence": 0.84,
+        "evidence": [
+          "payment timeout and 5xx rate rose together"
+        ]
+      },
+      "mttd_seconds": 34,
+      "detected": true
+    }
+  },
+  {
+    "id": 3,
+    "name": "inventory_pod_kill",
+    "fault_type": "availability",
+    "expected_root_service": "inventory-svc",
+    "detected": true,
+    "mttd": 21,
+    "rca_service": "inventory-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1781601939,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781601960,
+          "service": "inventory-svc",
+          "fault_class": "availability",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "inventory-svc",
+        "confidence": 0.91,
+        "evidence": [
+          "inventory container restart preceded checkout errors"
+        ]
+      },
+      "mttd_seconds": 21,
+      "detected": true
+    }
+  },
+  {
+    "id": 4,
+    "name": "api_gateway_cpu_saturation",
+    "fault_type": "cpu_saturation",
+    "expected_root_service": "api-gateway",
+    "detected": true,
+    "mttd": 46,
+    "rca_service": "api-gateway",
+    "rca_correct": true,
+    "observed_at_ts": 1781601940,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781601986,
+          "service": "api-gateway",
+          "fault_class": "cpu_saturation",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "api-gateway",
+        "confidence": 0.79,
+        "evidence": [
+          "gateway CPU and downstream latency fanout aligned"
+        ]
+      },
+      "mttd_seconds": 46,
+      "detected": true
+    }
+  },
+  {
+    "id": 5,
+    "name": "payment_db_memory_fill",
+    "fault_type": "memory",
+    "expected_root_service": "payment-db",
+    "detected": true,
+    "mttd": 62,
+    "rca_service": "payment-db",
+    "rca_correct": true,
+    "observed_at_ts": 1781601941,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781602003,
+          "service": "payment-db",
+          "fault_class": "memory",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-db",
+        "confidence": 0.73,
+        "evidence": [
+          "db memory pressure preceded pool wait spike"
+        ]
+      },
+      "mttd_seconds": 62,
+      "detected": true
+    }
+  },
+  {
+    "id": 6,
+    "name": "auth_clock_skew",
+    "fault_type": "time_skew",
+    "expected_root_service": "auth-svc",
+    "detected": false,
+    "mttd": null,
+    "rca_service": null,
+    "rca_correct": false,
+    "observed_at_ts": 1781601942,
+    "raw": {
+      "alerts": [],
+      "rca": {
+        "root_service": null,
+        "confidence": 0.0,
+        "evidence": [
+          "JWT errors stayed below detector noise floor"
+        ]
+      },
+      "mttd_seconds": null,
+      "detected": false
+    }
+  },
+  {
+    "id": 7,
+    "name": "log_collector_disk_fill",
+    "fault_type": "disk_fill",
+    "expected_root_service": "log-collector",
+    "detected": false,
+    "mttd": null,
+    "rca_service": null,
+    "rca_correct": false,
+    "observed_at_ts": 1781601943,
+    "raw": {
+      "alerts": [],
+      "rca": {
+        "root_service": null,
+        "confidence": 0.0,
+        "evidence": [
+          "pipeline lacks meta-monitoring for log ingestion lag"
+        ]
+      },
+      "mttd_seconds": null,
+      "detected": false
+    }
+  },
+  {
+    "id": 8,
+    "name": "frontend_gateway_partition",
+    "fault_type": "network_partition",
+    "expected_root_service": "edge:frontend-api-gateway",
+    "detected": true,
+    "mttd": 17,
+    "rca_service": "edge:frontend-api-gateway",
+    "rca_correct": true,
+    "observed_at_ts": 1781601944,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781601961,
+          "service": "edge:frontend-api-gateway",
+          "fault_class": "network_partition",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "edge:frontend-api-gateway",
+        "confidence": 0.86,
+        "evidence": [
+          "frontend timeouts began before service-local errors"
+        ]
+      },
+      "mttd_seconds": 17,
+      "detected": true
+    }
+  },
+  {
+    "id": 9,
+    "name": "dns_resolver_latency",
+    "fault_type": "dns_latency",
+    "expected_root_service": "dns-resolver",
+    "detected": true,
+    "mttd": 55,
+    "rca_service": "api-gateway",
+    "rca_correct": false,
+    "observed_at_ts": 1781601945,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781602000,
+          "service": "api-gateway",
+          "fault_class": "dns_latency",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "api-gateway",
+        "confidence": 0.58,
+        "evidence": [
+          "temporal correlation favored gateway symptoms over DNS"
+        ]
+      },
+      "mttd_seconds": 55,
+      "detected": true
+    }
+  },
+  {
+    "id": 10,
+    "name": "checkout_retry_storm",
+    "fault_type": "http_error",
+    "expected_root_service": "NOT checkout-svc",
+    "detected": true,
+    "mttd": 73,
+    "rca_service": "payment-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1781601946,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1781602019,
+          "service": "payment-svc",
+          "fault_class": "cascade_retry",
+          "severity": "page"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-svc",
+        "confidence": 0.67,
+        "evidence": [
+          "queue depth rose before checkout error volume peaked"
+        ]
+      },
+      "mttd_seconds": 73,
+      "detected": true
+    }
+  }
+]

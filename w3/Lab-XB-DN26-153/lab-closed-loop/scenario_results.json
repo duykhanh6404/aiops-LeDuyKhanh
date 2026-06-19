@@ -1,0 +1,114 @@
+[
+  {
+    "scenario": "scenario_1_success",
+    "passed": true,
+    "note": "Latency alert remediated by restart_service and verified stable.",
+    "events": [
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "RUNBOOK_EXEC",
+      "VERIFY_SAMPLE",
+      "VERIFY_SAMPLE",
+      "VERIFY_SAMPLE",
+      "VERIFY_PASS",
+      "ACTION_SUCCESS"
+    ],
+    "log": "logs\\scenario_1_success.jsonl"
+  },
+  {
+    "scenario": "scenario_2_rollback",
+    "passed": true,
+    "note": "Restart failed and rollback runbook executed.",
+    "events": [
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "RUNBOOK_EXEC",
+      "ROLLBACK_TRIGGERED",
+      "ROLLBACK_EXECUTED",
+      "FAILURE"
+    ],
+    "log": "logs\\scenario_2_rollback.jsonl"
+  },
+  {
+    "scenario": "scenario_3_circuit_breaker",
+    "passed": true,
+    "note": "Three consecutive failures opened the circuit and a later alert was skipped.",
+    "events": [
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "RUNBOOK_EXEC",
+      "ROLLBACK_TRIGGERED",
+      "ROLLBACK_EXECUTED",
+      "FAILURE",
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "RUNBOOK_EXEC",
+      "ROLLBACK_TRIGGERED",
+      "ROLLBACK_EXECUTED",
+      "FAILURE",
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "RUNBOOK_EXEC",
+      "ROLLBACK_TRIGGERED",
+      "ROLLBACK_EXECUTED",
+      "FAILURE",
+      "CIRCUIT_OPEN",
+      "CIRCUIT_BREAKER_HALT",
+      "ALERT_DETECTED",
+      "CIRCUIT_OPEN"
+    ],
+    "log": "logs\\scenario_3_circuit_breaker.jsonl"
+  },
+  {
+    "scenario": "scenario_4_transactional_rollback",
+    "passed": true,
+    "note": "Step C failed; rollback ran step B then step A.",
+    "events": [
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "TRANSACTIONAL_STEP_SUCCESS",
+      "TRANSACTIONAL_STEP_SUCCESS",
+      "TRANSACTIONAL_STEP_FAIL",
+      "TRANSACTIONAL_ROLLBACK_STEP",
+      "TRANSACTIONAL_ROLLBACK_STEP",
+      "TRANSACTIONAL_ROLLBACK_COMPLETE",
+      "FAILURE"
+    ],
+    "log": "logs\\scenario_4_transactional_rollback.jsonl"
+  },
+  {
+    "scenario": "scenario_5_concurrent_alert_race",
+    "passed": true,
+    "note": "Same-service alert was skipped as busy; different service proceeded.",
+    "events": [
+      "ALERT_DETECTED",
+      "SERVICE_LOCK_BUSY",
+      "ALERT_DETECTED",
+      "BLAST_RADIUS_PASS",
+      "DRY_RUN_PASS",
+      "RUNBOOK_EXEC",
+      "VERIFY_SAMPLE",
+      "VERIFY_SAMPLE",
+      "VERIFY_SAMPLE",
+      "VERIFY_PASS",
+      "ACTION_SUCCESS"
+    ],
+    "log": "logs\\scenario_5_concurrent_alert_race.jsonl"
+  },
+  {
+    "scenario": "scenario_6_llm_hallucination_defense",
+    "passed": true,
+    "note": "Invalid LLM runbook suggestion was rejected before dry-run/action.",
+    "events": [
+      "ALERT_DETECTED",
+      "DECISION_VALIDATION_FAILED"
+    ],
+    "log": "logs\\scenario_6_llm_hallucination_defense.jsonl"
+  }
+]

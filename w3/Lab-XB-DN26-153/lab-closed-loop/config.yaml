@@ -1,0 +1,55 @@
+poll_interval_seconds: 15
+verify:
+  attempts: 3
+  window_seconds: 60
+  success_threshold: 1.0
+circuit_breaker:
+  max_consecutive_failures: 3
+blast_radius:
+  max_actions_per_minute: 4
+  max_restarts_per_service_per_hour: 2
+allowed_runbooks:
+  restart_service:
+    path: runbooks/restart_service.sh
+    rollback: runbooks/rollback_restart.sh
+    type: single
+  clear_cache:
+    path: runbooks/clear_cache.sh
+    rollback: runbooks/rollback_restart.sh
+    type: single
+  scale_service:
+    path: runbooks/scale_replicas.sh
+    rollback: runbooks/rollback_restart.sh
+    type: single
+  transactional_deploy:
+    path: runbooks/transactional_deploy.sh
+    type: transaction
+    steps:
+      - prepare
+      - switch
+      - cleanup
+    rollback_steps:
+      - switch
+      - prepare
+rules:
+  HighLatency:
+    runbook: restart_service
+    action: restart
+  HighErrorRate:
+    runbook: clear_cache
+    action: clear_cache
+  InstanceDown:
+    runbook: restart_service
+    action: restart
+  ServiceDown:
+    runbook: restart_service
+    action: restart
+  CacheSaturation:
+    runbook: clear_cache
+    action: clear_cache
+  CapacityHigh:
+    runbook: scale_service
+    action: scale
+  BadDeploy:
+    runbook: transactional_deploy
+    action: transactional_deploy
